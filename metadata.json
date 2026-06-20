@@ -1,0 +1,6 @@
+{
+  "name": "D Fitness Gym",
+  "description": "Premium fitness center and training gym in Janakpuri, New Delhi. Discover expert coaching, stellar strength equipment, and a motivated fitness community in an energetic black and gold atmosphere.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
