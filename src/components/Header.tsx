@@ -41,7 +41,7 @@ export default function Header({ activePage, setActivePage, onJoinClick }: Heade
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 font-sans ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 font-sans ${
         isScrolled
           ? 'bg-black/50 backdrop-blur-md py-3 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
           : 'bg-black/20 backdrop-blur-sm py-4 border-b border-white/5'
@@ -129,77 +129,90 @@ export default function Header({ activePage, setActivePage, onJoinClick }: Heade
           </div>
 
         </div>
-      </div>
-
-      {/* Mobile Menu Panel */}
+      </div>      {/* Mobile Menu Panel */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <>
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 z-30 bg-black/80 backdrop-blur-sm md:hidden"
-            />
-            
-            {/* Drawer */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 z-30 h-full w-[280px] bg-black/60 backdrop-blur-xl border-l border-white/10 p-6 shadow-2xl flex flex-col justify-between md:hidden"
-            >
-              <div className="pt-14">
-                <div className="flex items-center gap-2 mb-8 pb-4 border-b border-zinc-900">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold-500 text-black">
-                    <Flame className="h-4 w-4" />
+          <motion.div
+            key="mobile-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md md:hidden"
+          />
+        )}
+        
+        {mobileMenuOpen && (
+          <motion.div
+            key="mobile-drawer"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed top-0 right-0 z-[120] h-[100dvh] w-[290px] bg-zinc-950 border-l border-white/10 p-6 shadow-2xl flex flex-col justify-between md:hidden overflow-y-auto"
+          >
+            <div className="pt-4 flex flex-col gap-6">
+              {/* Header inside Menu with beautiful rotating D logo and static close action */}
+              <div className="flex items-center justify-between pb-4 border-b border-white/15">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 bg-gold-500 flex items-center justify-center font-bold text-black rounded-xs transform rotate-45">
+                    <span className="-rotate-45 font-display font-black text-xs">D</span>
                   </div>
-                  <span className="font-display text-lg font-bold text-white tracking-tight uppercase">
-                    D FITNESS GYM
+                  <span className="font-display text-sm font-black text-white tracking-widest uppercase">
+                    D FITNESS<span className="text-gold-500"> GYM</span>
                   </span>
                 </div>
-
-                <nav className="flex flex-col gap-5">
-                  {navItems.map((item) => {
-                    const isActive = activePage === item.value;
-                    return (
-                      <button
-                        key={item.value}
-                        onClick={() => handleNavClick(item.value)}
-                        className={`text-left font-display text-base font-semibold uppercase tracking-wider transition-colors py-1 cursor-pointer ${
-                          isActive ? 'text-gold-500 font-extrabold' : 'text-zinc-400 hover:text-white'
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-
-              <div className="space-y-4 border-t border-zinc-900 pt-6">
-                <a
-                  href="tel:+919671592059"
-                  className="flex items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/60 py-3 text-sm font-semibold text-zinc-300"
-                >
-                  <Phone className="h-4 w-4 text-gold-500" />
-                  +91 96715 92059
-                </a>
+                {/* Manual Close Button inside the navigation drawer */}
                 <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onJoinClick();
-                  }}
-                  className="w-full rounded-lg bg-gold-500 py-3.5 text-center font-display text-sm font-bold text-black shadow-lg shadow-gold-500/10 cursor-pointer"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-1.5 rounded-lg border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+                  aria-label="Close mobile menu"
                 >
-                  JOIN NOW
+                  <X className="h-4 w-4" />
                 </button>
               </div>
-            </motion.div>
-          </>
+
+              {/* Navigation list */}
+              <nav className="flex flex-col gap-3 py-2">
+                {navItems.map((item) => {
+                  const isActive = activePage === item.value;
+                  return (
+                    <button
+                      key={item.value}
+                      onClick={() => handleNavClick(item.value)}
+                      className={`text-left font-display text-xs font-bold uppercase tracking-widest transition-all py-3 px-4 rounded-lg cursor-pointer ${
+                        isActive 
+                          ? 'text-gold-500 bg-gold-500/15 border border-gold-500/20 font-black shadow-[0_0_12px_rgba(212,175,55,0.15)]' 
+                          : 'text-zinc-300 hover:text-white hover:bg-white/5 border border-transparent'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Support and Quick Action Call buttons */}
+            <div className="space-y-3.5 border-t border-white/10 pt-6 mt-6 pb-4">
+              <a
+                href="tel:+919671592059"
+                className="flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 py-3 text-xs font-bold text-zinc-300 hover:bg-white/10 hover:text-white transition-all font-mono"
+              >
+                <Phone className="h-3.5 w-3.5 text-gold-500" />
+                +91 96715 92059
+              </a>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onJoinClick();
+                }}
+                className="w-full rounded-lg bg-gold-500 py-3.5 text-center font-display text-xs font-black uppercase tracking-widest text-black shadow-lg shadow-gold-500/20 hover:bg-gold-600 active:scale-95 transition-all cursor-pointer"
+              >
+                JOIN NOW
+              </button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>
